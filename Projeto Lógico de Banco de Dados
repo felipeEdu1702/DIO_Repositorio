@@ -1,0 +1,359 @@
+-- Criação do banco de dados para o cenário de um E-comerce
+
+create database ecomerce;
+use ecomerce;
+
+-- drop database ecomerce;
+
+-- Criando a Tabela Cadastro
+create table Cadastro(
+    ID_Cadastro int primary key auto_increment,
+    Nome varchar(45) not null,
+    Endereço varchar(250),
+    Telefone varchar(20) not null,
+    E_mail varchar(100),
+	CPF char(11) unique,
+    CNPJ char(14) unique, 
+    Tipo_Cadastro enum("Cliente", "Fornecedor", "Funcionário", "Vendedor_Terceiro", "Vendedor"),    
+    Data_Cadastro Date   
+);
+-- Populando a tabela Cadastro
+insert into Cadastro ( Nome, Endereço, Telefone, E_mail, CPF, CNPJ, Tipo_Cadastro )
+values('Margot Martin', 'Rua A1', '458860105', 'margot_martin@margot.com.br', '47071222274', '15231696816001', 'Cliente'),
+      ('Mila Mercier', 'Rua B2', '454476537', ' milamercier@mila.com.br', '37536781074', '36620113600001', 'Cliente' ),
+	  ('Ambre Lambert', 'Rua C3', '218562031', 'amberlambert@ambre.com.br', '34211894809', '82183064208001', 'Cliente'),
+      ('Emma Masson', 'Rua D4', '768092211', ' emmamasson@emma.com.br', '69200751270', '62089813092001', 'Cliente' ),
+      ('Julie Girard', 'Rua E5', '808517022', 'juliegirard', '31641657047', '25682881928001', 'Vendedor_Terceiro'),
+      ('Camille Lefebvre', 'Rua F6', '300762461', 'camilelefebvre@camile.com.br', '84123882815', '60700751142001', 'Fornecedor'),
+      ('Clara Nicolas', 'Rua G7', '183396345', 'claranicolas@clara', '67757827752', '77421696110001', 'Funcionário'),
+      ('Leonie Roux', 'Rua H8', '294492652', 'leoniceroux@leonice.com.br', '18777714237', '45408573382001', 'Vendedor_Terceiro' ),
+      ('Mila Chevalier', 'Rua I9', '966452473', ' milachevalier', '56660750576', '63500726202001','Vendedor' ),
+      ('Mathilde Nicolas', 'Rua J10', '860420139', 'mathildenicolas', '92103187250', '84158622998001', 'Vendedor')
+;
+
+
+
+-- Criando a Tabela Histórico de Compras
+create table Historico_Compras(
+    ID_Historico_Compras int primary key auto_increment,
+    ID_Pedido int
+);
+
+-- Criando a Tabela Pedido
+create table Pedido(
+    ID_Pedido int primary key auto_increment,
+    Frete float(5,2),
+    Status_Pedido enum("Em Aprovação", "Aprovado", "Em Separação", "Enviado", "Cancelado") not null,
+    Descrição varchar(150),
+    Data_Pedido date,
+    ID_Pagamento int,
+    ID_Vendedor int,    
+    ID_Itens_Pedido int,    
+    ID_Cliente int
+);
+-- Populando a tabela Pedido
+insert into Pedido( Frete, Status_Pedido, Descrição, Data_Pedido )
+values (146.89,'Em Aprovação','meias', '2017-6-15'),
+       (253.65, 'Aprovado', 'pijama', '2019-4-10'),
+       (156.69, 'Enviado', 'sandália' , '2025-5-11'),
+       (221.33, 'Aprovado' , 'camisa social masculina', '2003-3-5'),
+       (160.78, 'Em Separação', 'blazer masculino', '2006-3-10'),
+       (105.88, 'Em Aprovação', 'bermuda sarja', '2022-10-9'),
+       (251.99, 'Em Aprovação', 'pijama masculino', '2000-11-2'),
+       (169.54, 'Em Aprovação', 'sandália cinza', '2017-8-11'),
+       (171.56, 'Aprovado', 'lingerie calsinha', '2007-1-4)',
+       (202.66, 'Em Separação', 'lingerie conjunto de dormir', '2021-3-12'),
+       (149.00, 'Em Separação', 'calça linho', '2009-5-7'),
+       (115.45, 'Em Aprovação', 'sapato social feminino', '2000-5-8'),
+       (236.85, 'Em Aprovação', 'blazer feminino', '2016-2-2'),
+       (133.32, 'Enviado', 'tênis feminino', '2011-5-11'),
+       (113.66, 'Em Aprovação', 'chinelo', '2000-8-11'),
+       (232.78, 'Em Aprovação', 'calça jeans', '2005-4-9'),
+       (170.33, 'Em Aprovação', 'tênis masculino', '2012-12-12'),
+       (188.88, 'Enviado', 'bermuda vermelha', '2007-11-1'),
+       (112.78, 'Aprovado', 'calça legging', '2021-12-9'),
+       (170.11, 'Aprovado', 'cinto feminino', '2023-7-2'),
+       (254.84, 'Em Separação', 'calça jeans feminino', '2005-7-5'),
+       (195.47, 'Aprovado', 'sandália alta', '2004-7-7'),
+       (164.96, 'Aprovado', 'tênis esportivo', '2003-1-9'),
+       (238.99, 'Aprovado', 'blazer infantil', '2018-12-4'),
+	   (100.47, 'Em Separação', 'calsa social feminino', '2020-8-4'),
+       (131.94, 'Em Aprovação', 'pijama infantil', '2021-3-1'),
+       (163.36, 'Em Aprovação', 'sapato infantil', '2018-7-9'),
+       (112.78, 'Enviado', 'meias calca', '2000-6-4'),
+       (124.47, 'Enviado', 'calça legging preta', '2000-11-3'),
+       (244.34, 'Em Aprovação', 'cinto em couro', '2014-1-2')
+;
+
+describe Pedido;
+
+select * From Pedido;
+
+
+-- Criando a Tabela Itens_Pedido
+create table Itens_Pedido(
+    ID_Itens_Pedido int primary key auto_increment,
+    ID_Pedido int,
+    ID_Produto int,
+    Quantidade int not null
+);
+-- Populando a tabela Itens_Pedido
+insert into Itens_Pedido( Quantidade )
+values(15),
+      (10),
+      (11),
+      (5),
+      (10),
+      (9),
+      (2),
+      (11),
+      (4),
+      (12),
+      (7),
+      (8),
+      (2),
+      (11),
+      (11),
+      (9),
+      (12),
+      (1),
+      (9),
+      (2),
+      (5),
+      (7),
+      (9),
+      (4),
+      (4),
+      (1),
+      (9),
+      (4),
+      (2),
+	  (3)
+;
+
+-- Criando a Tabela Cliente
+create table Cliente(
+    ID_Cliente int primary key auto_increment,
+    ID_Cadastro int,
+    ID_Historico_Compras int
+); 
+
+-- Criando a Tabela Fornecedor
+Create table Fornecedor(
+    ID_Fornecedor int primary key auto_increment,
+    ID_cadastro int
+);
+
+-- Criando a tabela Vendedor
+create table Vendedor(
+    ID_Vendedor int primary key auto_increment,
+    ID_cadastro int
+);
+
+-- Criando a Tabela Vendedor_Terceiro
+create table Vendedor_Terceiro(
+    ID_Vendedor int primary key auto_increment,
+    ID_Cadastro int
+);
+
+-- Criando a Tabela Produto
+create table Produto(
+    ID_Produto int primary key auto_increment,
+    Descrição_Produto varchar(100),
+    Valor_Unitário float(5,2) not null,
+    Código_de_Barras char(13),
+    Categoria_Produto varchar(30),
+    Nome_Produto varchar(50) not null
+);
+-- Populando a tabela Produto
+insert into Produto( Descrição_Produto, Valor_Unitário, Código_de_Barras, Categoria_Produto, Nome_Produto )
+values('Rosa', 8.99, '9297254337869', 'vestuario', 'meias'),
+      ('Azul', 120.88, '5261681680107', 'vestuario', 'pijama'),
+      ('Cinza', 48.66, '9463524409228', 'vestuario', 'sandália'),
+      ('Rosa', 268.88, '2690083488127', 'vestuario', 'camisa social masculina'),
+      ('Marrom', 488.66, '5496169525977', 'vestuario', 'blazer masculino'),
+      ('Marrom', 120.69, '3091716231140', 'vestuario', 'bermuda sarja'),
+      ('Preto', 79.87, '2866253769929', 'vestuario', 'pijama masculino'),
+      ('Azul', 15.47, '6304730170261', 'vestuario', 'sandália cinza'),
+      ('Azul', 39.35, '9494978497005', 'vestuario', 'lingerie calsinha'),
+      ('Rosa', 188.47, '3779538688867', 'vestuario', 'lingerie conjunto de dormir'),
+      ('Vermelho', 266.33, '5893533314631', 'vestuario', 'calça linho'),
+      ('Marrom', 899.82, '1238922592305', 'vestuario', 'sapato social feminino'),
+      ('Vermelho', 699.55, '7363029166795', 'vestuario', 'blazer feminino'),
+      ('Cinza', 599.89, '5841389912900', 'vestuario','tênis feminino'),
+      ('Vermelho', 88.45, '7117842808209', 'vestuario', 'chinelo'),
+      ('Azul', 259.66, '2794093658940', 'vestuario', 'calça jeans'),
+      ('Marrom', 589.89, '5235086570609', 'vestuario', 'tênis masculino'),
+      ('Cinza', 88.32, '3514512704910', 'vestuario', 'bermuda vermelha'),
+      ('Preto', 199.38, '8149852109998', 'vestuario', 'calça legging'),
+      ('Vermelho', 355.85, '7987072053654', 'vestuario', 'cinto feminino'),
+      ('Azul', 499.68, '7313620829193', 'vestuario', 'calça jeans feminino'),
+      ('Cinza', 89.99, '1561658196792', 'vestuario', 'sandália alta'),
+      ('Preto', 699.66, '1624093451714', 'vestuario', 'tênis esportivo'),
+      ('Marrom', 266.89, '6132142675199', 'vestuario', 'blazer infantil'),
+      ('Rosa', 399.42, '5777782881556', 'vestuario', 'calsa social feminino'),
+      ('Cinza', 120.38, '6460196814887', 'vestuario', 'pijama infantil'),
+      ('Rosa', 266.14, '1732608274528', 'vestuario', 'sapato infantil'),
+      ('Vermelho', 122.61, '7714274626889', 'vestuario', 'meias calca'),
+      ('Azul', 266.64, '4369326319503', 'vestuario', 'cinto em couro'),
+      ('Rosa', 169.81, '3570132796424', 'vestuario', 'calça legging preta')
+;
+
+
+-- Criando a Tabela Pagamento
+create table Pagamento(
+    ID_Pagamento int primary key auto_increment,
+    Tipo_Pagamento enum("A Vista", "PIX", "Cartão", "Boleto") not null,
+    ID_Cliente int
+);
+-- Populando a tabela Pagamento
+insert into Pagamento(Tipo_Pagamento)
+values('PIX'),
+      ('PIX'),
+      ('A vista'),
+      ('PIX'),
+      ('PIX'),
+      ('A vista'),
+      ('A vista'),
+      ('Cartão'),
+      ('A vista'),
+      ('PIX'),
+      ('Cartão'),
+      ('PIX'),
+      ('Cartão'),
+      ('PIX'),
+      ('Boleto'),
+      ('PIX'),
+      ('A vista'),
+      ('Cartão'),
+      ('PIX'),
+      ('Boleto'),
+      ('A vista'),
+      ('PIX'),
+      ('A vista'),
+      ('PIX'),
+      ('Boleto'),
+	  ('Boleto'),
+      ('A vista'),
+      ('Boleto'),
+      ('A vista'),
+      ('PIX')
+;
+describe Pagamento;
+select * from pagamento;
+
+-- Criando a Estoque
+create table Estoque(
+    ID_Estoque int primary key auto_increment,
+    Nome_estoque varchar(100),
+    Tipo_Estoque enum("Terceiro", "Proprio"),
+    Quantidade_Estoque int,    
+    ID_Produto int
+);
+-- Populando a tabela Estoque
+insert into Estoque(Tipo_Estoque, Quantidade_Estoque)
+values('Proprio', 323),
+      ('Proprio', 188),
+      ('Proprio', 299),
+      ('Terceiro', 139),
+      ('Terceiro', 99),
+      ('Terceiro', 95),
+      ('Terceiro', 56),
+      ('Proprio', 146),
+      ('Proprio', 241),
+      ('Proprio', 211),
+      ('Proprio', 211),
+      ('Proprio', 185),
+      ('Terceiro', 190),
+      ('Terceiro', 200),
+      ('Proprio', 271),
+      ('Terceiro', 36),
+      ('Proprio', 176),
+      ('Proprio', 39),
+      ('Terceiro', 209),
+      ('Proprio', 48),
+      ('Proprio', 213),
+      ('Proprio', 191),
+      ('Terceiro', 271),
+      ('Terceiro', 115),
+      ('Proprio', 259),
+      ('Proprio', 50),
+      ('Proprio', 115),
+      ('Terceiro', 126),
+      ('Proprio', 78),
+	  ('Terceiro', 67),
+      ('Terceiro', 210),
+      ('Proprio', 135),
+      ('Proprio', 174),
+      ('Terceiro', 81),
+      ('Terceiro', 248),
+      ('Proprio', 192),
+      ('Terceiro', 270),
+      ('Proprio', 309)
+;
+
+alter table Cliente 
+    add constraint fk_Cadastro_Cliente foreign key (ID_Cadastro) references Cadastro (ID_Cadastro),
+    add constraint fk_Historico_Cliente foreign key (ID_Historico_Compras) references Historico_Compras (ID_Historico_Compras)
+;
+
+alter table Historico_Compras 
+    add constraint fk_Historico_Pedido foreign key (ID_Pedido) references Pedido (ID_Pedido)
+;
+
+alter table Itens_Pedido
+     add constraint FK_Itens_Pedido foreign key (ID_Pedido) references Pedido (ID_Pedido)
+;
+
+alter table Pedido 
+    add constraint fk_Pedido_Pagamento foreign key (ID_Pagamento) references Pagamento (ID_Pagamento),
+    add constraint fk_Pedido_Vendedor foreign key (ID_Vendedor) references Vendedor (ID_Vendedor),
+    add constraint fk_Pedido_Itens_Pedido foreign key (ID_Itens_Pedido) references Itens_Pedido (ID_Itens_Pedido),
+    add constraint fk_Pedido_Cliente foreign key (ID_Cliente) references Cliente (ID_Cliente)
+;
+
+alter table Fornecedor
+    add constraint fk_Cadastro_Fornecedor foreign key (ID_Cadastro) references Cadastro (ID_Cadastro)
+;
+
+alter table Estoque
+    add constraint fk_Estoque_Produto foreign key (ID_Produto) references Produto(ID_Produto)
+;
+
+alter table Vendedor_Terceiro
+    add constraint fk_Cadastro_Vendedor foreign key (ID_Cadastro) references Cadastro (ID_Cadastro)
+;
+
+alter table Vendedor
+    add constraint fk_Vendedor_Cadastro foreign key (ID_Cadastro) references Cadastro(ID_Cadastro)
+;
+
+alter table Pagamento
+    add constraint fk_Pagamento_Cliente foreign key (ID_Cliente) references Cliente(ID_Cadastro)
+;
+
+-- Fazendo consultas nas tabelas
+
+-- Quais são os nomes e endereços de todos os clientes cadastrados?
+SELECT Nome, Endereço FROM Cadastro WHERE Tipo_Cadastro = 'Cliente';
+
+-- Quais clientes possuem CPF cadastrado?
+SELECT Nome FROM Cadastro WHERE CPF IS NOT NULL;
+
+-- Quais clientes foram cadastrados após uma determinada data?
+SELECT Nome FROM Cadastro WHERE Data_Cadastro > '2020-01-01';
+
+-- Ordenar os clientes por nome em ordem alfabética.
+SELECT Nome FROM Cadastro WHERE Tipo_Cadastro = 'Cliente' ORDER BY Nome;
+
+-- Quais pedidos estão com o status "Aprovado"?
+SELECT * FROM Pedido WHERE Status_Pedido = 'Aprovado';
+
+-- Quais pedidos têm frete acima de um determinado valor?
+SELECT * FROM Pedido WHERE Frete > 10.00;
+
+-- Quais os pedidos feitos em um determinado ano?
+SELECT * FROM Pedido WHERE YEAR(Data_Pedido) = 2021;
+
+-- Ordenar os pedidos por data, do mais recente para o mais antigo.
+SELECT * FROM Pedido ORDER BY Data_Pedido DESC;
